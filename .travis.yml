@@ -1,5 +1,25 @@
-language: php
 php:
-  - 7.2
-install:
-  - composer update
+- 7.0
+- 7.1
+- 7.2
+
+services:
+- mysql
+
+before_script:
+- cp .env.travis .env
+- mysql -e 'create database testing;'
+- composer self-update
+- composer install --no-interaction
+- php artisan key:generate
+- php artisan migrate --seed
+
+script:
+    - vendor/bin/phpunit
+
+notifications:
+email:
+    recipients:
+        - youremail@x.com
+    on_success: always
+    on_failure: always
